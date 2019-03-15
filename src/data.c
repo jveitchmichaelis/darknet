@@ -800,7 +800,7 @@ data load_data_detection(int n, char **paths, int m, int w, int h, int c, int bo
 
         int flag = (c >= 3);
         IplImage *src;
-        if ((src = cvLoadImage(filename, flag)) == 0)
+        if ((src = cvLoadImage(filename, flag | CV_LOAD_IMAGE_UNCHANGED)) == 0)
         {
             fprintf(stderr, "Cannot load image \"%s\"\n", filename);
             char buff[256];
