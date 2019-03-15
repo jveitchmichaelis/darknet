@@ -1078,6 +1078,7 @@ void show_image(image p, const char *name)
 image ipl_to_image(IplImage* src)
 {
     unsigned char *data = (unsigned char *)src->imageData;
+    uint16_t *data_16 = (uint16_t *)src->imageData;
     int h = src->height;
     int w = src->width;
     int c = src->nChannels;
@@ -1088,7 +1089,14 @@ image ipl_to_image(IplImage* src)
     for(k= 0; k < c; ++k){
         for(i = 0; i < h; ++i){
             for(j = 0; j < w; ++j){
-                out.data[count++] = data[i*step + j*c + k]/255.;
+                if(src->depth == 8){
+                    out.data[count++] = ((float) data[i*step + j*c + k])/255.;
+                }else if(src->depth == 16){
+                    out.data[count++] = ((float) data_16[i*step/2 + j*c + k])/65535.;
+                }else{
+                    fprintf(stderr, "Unsupported bit depth\n");
+                    break;
+                }
             }
         }
     }
